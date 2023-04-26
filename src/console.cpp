@@ -1,5 +1,6 @@
 #include "console.h"
 
+
 void Console::setup(int max_lines, int char_size, int width, 
 					unsigned int screen_height)
 {
@@ -8,7 +9,7 @@ void Console::setup(int max_lines, int char_size, int width,
 
 	background_.setSize(sf::Vector2f(static_cast<float>(width),
 									 static_cast<float>(max_lines * line_height_))); 
-	background_.setFillColor(sf::Color(255, 255, 255, 32));
+	background_.setFillColor(sf::Color(64, 64, 64, 192));
 
 	// set position to bottom left of screen
 	sf::Vector2f position{ 0.f, screen_height - background_.getSize().y };
@@ -21,6 +22,7 @@ void Console::setup(int max_lines, int char_size, int width,
 	text_.setFillColor(sf::Color::White);
 }
 
+
 void Console::add_message(std::string msg)
 {
 	lines_.push_back(msg);
@@ -30,6 +32,7 @@ void Console::add_message(std::string msg)
 		lines_.erase(lines_.begin());
 	}
 }
+
 
 void Console::render(Window& window)
 {

@@ -23,6 +23,7 @@
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\snake.h" />
     <ClInclude Include="src\window.h" />
+    <ClInclude Include="src\world.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\snake.cpp" />
     <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

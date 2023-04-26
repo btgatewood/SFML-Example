@@ -1,9 +1,9 @@
 #include "snake.h"
 
 
-Snake::Snake(int cell_size) : cell_size_(static_cast<float>(cell_size))
+Snake::Snake()
 {
-	body_rect_.setSize(sf::Vector2f(cell_size_ - 1.f, cell_size_ - 1.f));
+	body_rect_.setSize(sf::Vector2f(TILE_SIZE - 1.f, TILE_SIZE - 1.f));
 	reset();
 }
 
@@ -58,37 +58,37 @@ void Snake::fixed_update()
 	{
 		if (head.position == itr->position)  // body collision
 		{
-			/* TODO: ???
+			/* TODO:  game_over()?  cut()?
 			 *
 			 * auto num_segments = body_.end() - itr;
 			 * cut_segments(num_sugments);
 			 *
-			 * game_over();
-			 *  
 			 */
-			reset();
+
+			reset();  // BUG: This causes a crash by clearing vector while
+					  //	  while iterating over it.
 		}
 	}
 }
 
 
 /* -------------------------------------------------------------------------- */
-void Snake::render(sf::RenderWindow& window)
+void Snake::render(Window& window)
 {
 	// draw body
 	body_rect_.setFillColor(sf::Color::Green);
 	for (auto itr = body_.begin() + 1; itr != body_.end(); ++itr)
 	{
-		body_rect_.setPosition(itr->position.x * cell_size_,
-							   itr->position.y * cell_size_);
+		body_rect_.setPosition(itr->position.x * TILE_SIZE,
+							   itr->position.y * TILE_SIZE);
 		window.draw(body_rect_);
 	}
 
 	// draw head
 	const auto& head = body_.front();
 	body_rect_.setFillColor(sf::Color::Yellow);
-	body_rect_.setPosition(head.position.x * cell_size_, 
-						   head.position.y * cell_size_);
+	body_rect_.setPosition(head.position.x * TILE_SIZE, 
+						   head.position.y * TILE_SIZE);
 	window.draw(body_rect_);
 }
 
@@ -100,7 +100,7 @@ void Snake::add_segment()
 
 	if (body_.size() > 1)
 	{
-		// use tail's next position to determine next segment position
+		// use tail's next position to determine added segment's position
 		Segment& next = body_[body_.size() - 2];  // next to last element
 
 		if (tail.position.x == next.position.x)
@@ -126,7 +126,7 @@ void Snake::add_segment()
 			}
 		}
 	}
-	else  // NOTE: I don't think we will ever use this next condition.
+	else  // NOTE: I don't think we will ever use this next conditional.
 	{
 		// use the snake's head direction to determine next segment position
 		if (direction_ == Direction::None)

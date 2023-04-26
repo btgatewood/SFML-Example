@@ -48,12 +48,12 @@ int main()
 		self_timer += elapsed_time;
 		if (self_timer > sf::seconds(1.f))  // update fps data every 10 seconds
 		{
-			// TODO: Render fps data at top of screen (not in console).
+			// TODO: Render fps data at top right of screen (not in console).
 			std::ostringstream oss;
 			oss << (render_count / 1.f) << "fps @ " 
 				<< (update_count / 1.f) << "hz";
 			// write fps data to game's console
-			game.get_console()->add_message(oss.str());
+			// game.get_console()->add_message(oss.str());
 
 			update_count = 0;
 			render_count = 0;
