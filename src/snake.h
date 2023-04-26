@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <SFML/Graphics.hpp>
 
@@ -29,17 +30,19 @@ class Snake
 public:
 	Snake(int cell_size);
 
-	void reset();
-
-	void update();
+	void fixed_update();
 	void render(sf::RenderWindow& window);
 
+	void add_segment();
+
 private:
-	int cell_size_{ 16 };
-	sf::RectangleShape body_rect_;
+	void reset();
+
+	// void move();
+	// void check_collisions();
 
 	std::vector<Segment> body_;
-
-	Direction direction_{ Direction::None };
-	int speed_{ 10 };
+	Direction			 direction_	{ Direction::None };
+	sf::RectangleShape	 body_rect_;
+	float				 cell_size_ { 16.f };
 };
