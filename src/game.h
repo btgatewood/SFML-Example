@@ -16,8 +16,7 @@ public:
 	void render();
 
 	Window* get_window()   { return &window_; }
-	Console* get_console() { return &console_; }
-
+	
 private:
 	Window window_;
 	Console console_;

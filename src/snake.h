@@ -19,7 +19,7 @@ enum class Direction
 };
 
 
-struct Segment  // TODO: Should struct Segment be a private member of class Snake?
+struct Segment  // TODO: Should Segment struct be a private member of Snake class?
 {
 	Segment(int x, int y) 
 		: position(x, y) 
@@ -34,24 +34,25 @@ class Snake
 public:
 	Snake();
 
+	void reset();
+
 	void fixed_update();
 	void render(Window& window);
 
 	void add_segment();
 
-	Direction get_direction() { return direction_; }
+	Direction get_prev_direction();
 	void set_direction(Direction dir) { direction_ = dir; }
 
-	int get_speed() { return 8; }  // cells per second
-
-	sf::Vector2i get_position() { return body_[0].position; }
+	int get_speed()					  { return 8; }  // cells per second
+	sf::Vector2i get_position()		  { return body_[0].position; }
 
 private:
-	void reset();
 	// void move();
 	// void check_collisions();
 
-	Direction			 direction_{ Direction::None };
+	Direction direction_{ Direction::None };
+
 	std::vector<Segment> body_;
 	sf::RectangleShape	 body_rect_;
 };

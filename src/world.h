@@ -24,6 +24,7 @@ private:
 	void respawn_apple();
 
 	Item apple_;
+	sf::RectangleShape walls_[4];
 
 	float tile_size_;
 	sf::Vector2u window_size_;

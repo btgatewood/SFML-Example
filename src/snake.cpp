@@ -12,15 +12,14 @@ void Snake::reset()
 {
 	body_.clear();
 
+	body_.push_back(Segment(8, 8));
 	body_.push_back(Segment(7, 8));
-	body_.push_back(Segment(7, 7));
-	body_.push_back(Segment(7, 6));
+	body_.push_back(Segment(6, 8));
 
 	direction_ = Direction::None;
 }
 
 
-/* -------------------------------------------------------------------------- */
 void Snake::fixed_update()
 {
 	if (direction_ == Direction::None) { return; }
@@ -49,30 +48,24 @@ void Snake::fixed_update()
 		body_[0].position.y += 1;
 	}
 
+	// check collisions
 	if (body_.size() < 5) { return; }
 
-	// check collisions
 	Segment& head = body_.front();
-
 	for (auto itr = body_.begin() + 1; itr != body_.end(); ++itr)
 	{
 		if (head.position == itr->position)  // body collision
 		{
-			/* TODO:  game_over()?  cut()?
-			 *
-			 * auto num_segments = body_.end() - itr;
-			 * cut_segments(num_sugments);
-			 *
-			 */
-
-			reset();  // BUG: This causes a crash by clearing vector while
-					  //	  while iterating over it.
+			// TODO: game_over() or cut_segments()?
+			// ex:	auto num_segments = body_.end() - itr;
+			//		cut_segments(num_sugments);
+			reset();
+			break;  // avoid crashing the program
 		}
 	}
 }
 
 
-/* -------------------------------------------------------------------------- */
 void Snake::render(Window& window)
 {
 	// draw body
@@ -93,61 +86,27 @@ void Snake::render(Window& window)
 }
 
 
-/* -------------------------------------------------------------------------- */
 void Snake::add_segment()
 {
-	Segment& tail = body_.back();  // last element
+	// added segment will be moved to the tail's position on next update
+	Segment& head = body_.front();
+	body_.push_back(Segment(head.position.x, head.position.y));
+}
 
-	if (body_.size() > 1)
+
+Direction Snake::get_prev_direction()
+{
+	Segment& head = body_[0];
+	Segment& prev = body_[1];  // 2nd element is previous head position
+
+	if (head.position.x == prev.position.x)
 	{
-		// use tail's next position to determine added segment's position
-		Segment& next = body_[body_.size() - 2];  // next to last element
-
-		if (tail.position.x == next.position.x)
-		{
-			if (tail.position.y > next.position.y)  // tail is moving up
-			{
-				body_.push_back(Segment(tail.position.x, tail.position.y + 1));
-			}
-			else  // tail is moving down
-			{
-				body_.push_back(Segment(tail.position.x, tail.position.y - 1));
-			}
-		}
-		else
-		{
-			if (tail.position.x > next.position.x)  // tail is moving left
-			{
-				body_.push_back(Segment(tail.position.x + 1, tail.position.y));
-			}
-			else  // tail is moving right
-			{
-				body_.push_back(Segment(tail.position.x - 1, tail.position.x));
-			}
-		}
+		return head.position.y > prev.position.y ?
+			Direction::Down : Direction::Up;
 	}
-	else  // NOTE: I don't think we will ever use this next conditional.
+	else  // if (head.position.y == prev.position.y)
 	{
-		// use the snake's head direction to determine next segment position
-		if (direction_ == Direction::None)
-		{
-			return;  // don't add segment if snake is not moving
-		}
-		else if (direction_ == Direction::Up)
-		{
-			body_.push_back(Segment(tail.position.x, tail.position.y + 1));
-		}
-		else if (direction_ == Direction::Down)
-		{
-			body_.push_back(Segment(tail.position.x, tail.position.y - 1));
-		}
-		else if (direction_ == Direction::Left)
-		{
-			body_.push_back(Segment(tail.position.x + 1, tail.position.y));
-		}
-		else if (direction_ == Direction::Right)
-		{
-			body_.push_back(Segment(tail.position.x - 1, tail.position.y));
-		}
+		return head.position.x > prev.position.x ?
+			Direction::Right : Direction::Left;
 	}
 }
