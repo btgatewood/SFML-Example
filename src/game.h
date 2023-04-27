@@ -2,8 +2,6 @@
 
 #include "window.h"
 #include "console.h"
-#include "snake.h"
-#include "world.h"
 
 
 class Game
@@ -16,11 +14,9 @@ public:
 	void render();
 
 	Window* get_window()   { return &window_; }
+	Console* get_console() { return &console_; }
 	
 private:
 	Window window_;
 	Console console_;
-
-	Snake snake_;
-	World world_;
 };

@@ -53,7 +53,7 @@ int main()
 			oss << (render_count / 1.f) << "fps @ " 
 				<< (update_count / 1.f) << "hz";
 			// write fps data to game's console
-			// game.get_console()->add_message(oss.str());
+			game.get_console()->add_message(oss.str());
 
 			update_count = 0;
 			render_count = 0;

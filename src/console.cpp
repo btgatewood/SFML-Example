@@ -27,7 +27,7 @@ void Console::add_message(std::string msg)
 {
 	lines_.push_back(msg);
 
-	if (max_lines_ != 0)  // allows lines to be added before setup is called
+	if (max_lines_ != 0)  // allow lines to be added before setup is called
 	{
 		while (lines_.size() > max_lines_)
 		{
@@ -47,9 +47,13 @@ void Console::render(Window& window)
 	text_.setString(str);
 
 	// set position to bottom left of screen
-	// TODO: Add border padding to text position.
+	float x = 8.f;  // border padding
 	float y = window.get_size().y - (lines_.size() * line_height_);
-	text_.setPosition(3.f, y);
+	text_.setPosition(x, y);
+
+	// right align text
+	// text_.setOrigin(text_.getLocalBounds().width, text_.getLocalBounds().height);
+	// text_.setPosition(background_.getSize().x - 10.f, window.get_size().y + 10.f);
 
 	window.draw(background_);
 	window.draw(text_);
