@@ -5,7 +5,7 @@ void Console::setup(int max_lines, int char_size, int width,
 					unsigned int screen_height)
 {
 	max_lines_ = max_lines;
-	line_height_ = char_size * 1.2f;  // magic number
+	line_height_ = char_size * 1.2f;  // a magic number
 
 	background_.setSize(sf::Vector2f(static_cast<float>(width),
 									 static_cast<float>(max_lines * line_height_))); 
@@ -27,9 +27,12 @@ void Console::add_message(std::string msg)
 {
 	lines_.push_back(msg);
 
-	while (lines_.size() > max_lines_)
+	if (max_lines_ != 0)  // allows lines to be added before setup is called
 	{
-		lines_.erase(lines_.begin());
+		while (lines_.size() > max_lines_)
+		{
+			lines_.erase(lines_.begin());
+		}
 	}
 }
 
@@ -44,6 +47,7 @@ void Console::render(Window& window)
 	text_.setString(str);
 
 	// set position to bottom left of screen
+	// TODO: Add border padding to text position.
 	float y = window.get_size().y - (lines_.size() * line_height_);
 	text_.setPosition(3.f, y);
 

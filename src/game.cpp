@@ -3,8 +3,10 @@
 
 Game::Game() 
 	: window_(WINDOW_SIZE, "SFML Example")
-	, world_(WINDOW_SIZE, TILE_SIZE)
+	, world_(console_, WINDOW_SIZE, TILE_SIZE)
+	, snake_(console_)
 {
+	// TODO: Setup console using constructor?
 	console_.setup(12, 16, 320, window_.get_size().y);
 
 	// srand(static_cast<unsigned int>(time(nullptr)));

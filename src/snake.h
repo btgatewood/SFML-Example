@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "console.h"
 #include "window.h"
 
 
@@ -9,30 +10,12 @@ const sf::Vector2u WINDOW_SIZE{ 960, 960 };
 const float	TILE_SIZE{ 24.f };
 
 
-enum class Direction
-{
-	None,
-	Up,
-	Down,
-	Left,
-	Right
-};
-
-
-struct Segment  // TODO: Should Segment struct be a private member of Snake class?
-{
-	Segment(int x, int y) 
-		: position(x, y) 
-	{}
-
-	sf::Vector2i position;
-};
-
+enum class Direction { None, Up, Down, Left, Right };
 
 class Snake
 {
 public:
-	Snake();
+	Snake(Console& console);
 
 	void reset();
 
@@ -48,11 +31,18 @@ public:
 	sf::Vector2i get_position()		  { return body_[0].position; }
 
 private:
-	// void move();
-	// void check_collisions();
+	Console& console_;
+
+	struct Segment
+	{
+		Segment(int x, int y)
+			: position(x, y)
+		{}
+
+		sf::Vector2i position;
+	};
 
 	Direction direction_{ Direction::None };
-
 	std::vector<Segment> body_;
 	sf::RectangleShape	 body_rect_;
 };

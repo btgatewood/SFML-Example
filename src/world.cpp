@@ -3,19 +3,18 @@
 #include <iostream>
 
 
-World::World(sf::Vector2u window_size, float tile_size)
-	: window_size_(window_size)
+World::World(Console& console, sf::Vector2u window_size, float tile_size)
+	: console_(console)
+	, window_size_(window_size)
 	, tile_size_(tile_size)
 {
-	apple_.shape.setFillColor(sf::Color::Red);
-	apple_.shape.setRadius(tile_size_ / 2.f);
+	apple_shape_.setFillColor(sf::Color::Red);
+	apple_shape_.setRadius(tile_size_ / 2.f);
 
 	// NOTE: Seeding rng here because world is constructed before game.
 	// TODO: Seed rng in main?
 	srand(static_cast<unsigned int>(time(nullptr)));  // seed rng
-	// NOTE: We need to be able to access console from here but it's not
-	//		 initialized yet.
-	std::cout << "Seeded rng with time(nullptr): " << time(nullptr) << "\n";
+	console_.add_message("Seeded rng with {" + std::to_string(time(nullptr)) + "}.");
 	respawn_apple();
 
 	// create the walls
@@ -23,7 +22,7 @@ World::World(sf::Vector2u window_size, float tile_size)
 	{
 		walls_[i].setFillColor(sf::Color::Blue);
 
-		if (!((i + 1) % 2)) // is wall vertical?
+		if (!((i + 1) % 2))  // is wall vertical?
 		{
 			walls_[i].setSize(sf::Vector2f(static_cast<float>(window_size_.x), 
 										   tile_size_));
@@ -51,9 +50,9 @@ void World::respawn_apple()
 {
 	int max_x = window_size_.x / static_cast<int>(tile_size_) - 2;
 	int max_y = window_size_.y / static_cast<int>(tile_size_) - 2;
-	apple_.position = sf::Vector2i{	rand() % max_x + 1, rand() % max_y + 1 };
-	apple_.shape.setPosition(apple_.position.x * tile_size_,
-							 apple_.position.y * tile_size_);
+	apple_position_ = sf::Vector2i{	rand() % max_x + 1, rand() % max_y + 1 };
+	apple_shape_.setPosition(apple_position_.x * tile_size_,
+							 apple_position_.y * tile_size_);
 
 	// TODO: Check for snake collisions.
 }
@@ -61,10 +60,11 @@ void World::respawn_apple()
 
 void World::fixed_update(Snake& player)
 {
-	if (player.get_position() == apple_.position)
+	if (player.get_position() == apple_position_)
 	{
 		player.add_segment();
 		respawn_apple();
+		console_.add_message("Player ate an apple.");
 	}
 
 	auto grid_size_x = window_size_.x / tile_size_;
@@ -76,6 +76,7 @@ void World::fixed_update(Snake& player)
 		player.get_position().y > grid_size_y - 2)
 	{
 		player.reset();
+		console_.add_message("Player ate a wall.");
 	}
 }
 
@@ -87,5 +88,5 @@ void World::render(Window& window)
 		window.draw(wall);
 	}
 
-	window.draw(apple_.shape);
+	window.draw(apple_shape_);
 }

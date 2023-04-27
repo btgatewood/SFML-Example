@@ -1,7 +1,8 @@
 #include "snake.h"
 
 
-Snake::Snake()
+Snake::Snake(Console& console)
+	: console_(console)
 {
 	body_rect_.setSize(sf::Vector2f(TILE_SIZE - 1.f, TILE_SIZE - 1.f));
 	reset();
@@ -60,6 +61,7 @@ void Snake::fixed_update()
 			// ex:	auto num_segments = body_.end() - itr;
 			//		cut_segments(num_sugments);
 			reset();
+			console_.add_message("Player ate it's tail.");
 			break;  // avoid crashing the program
 		}
 	}
